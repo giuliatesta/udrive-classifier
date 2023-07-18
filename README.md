@@ -18,5 +18,8 @@
 6. perform the prediction over the validation test and compute accuracy
 
 
+### Project's specifics 
+Use Tensorflow 2 to train a neural network for the binary classification of cats and dogs based on images from this dataset. Images must be transformed from JPG to RGB (or grayscale) pixel values and scaled down. Experiment with different network architectures and training parameters documenting their influence of the final predictive performance. Use 5-fold cross validation to compute your risk estimates. While the training loss can be chosen freely, the reported cross-validated estimates must be computed according to the zero-one loss.
+NB: I adapted this project's specific to the problem of driving behaviour classification
 ### References
 - [Driving Behavior Dataset: using Machine learning Predict Driver's Behavior](https://www.kaggle.com/datasets/shashwatwork/driving-behavior-dataset?resource=download)
