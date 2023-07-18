@@ -1,0 +1,63 @@
+import pandas as pd
+import numpy as np
+
+from sklearn.model_selection import train_test_split
+
+from math import ceil
+
+SAMPLING_RATE = 2  # Sampling Rate: Average 2 samples (rows) per second
+WINDOW_SIZE = 14  # ceil(14 * SAMPLING_RATE)  # Best Window Size: 14 seconds
+
+
+def read_csv(path):
+    data = pd.read_csv(path, sep=',', index_col=False)
+    data.columns = ['class', 'gyroX', 'gyroY', 'gyroZ', 'accX', 'accY', 'accZ']
+    return data
+
+
+def _accelerometer_data(data):
+    return data.filter(like='acc', axis=1)
+
+
+def split_sensors_data(data):
+    df = pd.DataFrame(data)
+    return _accelerometer_data(df), _gyroscope_data(df)
+
+
+def _gyroscope_data(data):
+    return data.filter(like='gyro', axis=1)
+
+
+def remove_labels(data):
+    return np.delete(data, 0, 1)  # 0: index of label column,  1: delete over the columns
+
+
+def get_labels(data):
+    return data['class']
+
+
+def sliding_window(data):
+    labels = get_labels(data)
+    data = remove_labels(data)
+    windows_number = len(data) - WINDOW_SIZE + 1
+
+    windowed_data = np.zeros((windows_number, WINDOW_SIZE, data.shape[1]), np.float32)  # data.shape[1] quante sono le colonne + np.float32 data type
+    windowed_labels = np.zeros((windows_number, WINDOW_SIZE), np.int8)
+    for i in range(windows_number):
+        index_range = range(i,i + WINDOW_SIZE)
+        windowed_data[i] = data[index_range]
+        windowed_labels[i] = labels[index_range]
+    return windowed_data, windowed_labels
+
+
+def data_split(data, label):
+    acc_gyro_train, acc_gyro_test, label_train, label_test = train_test_split(
+        data, label, train_size=0.8, test_size=0.2)
+
+    # TODO: reshape and normalisation ?
+    # acc_gyro_train.shape[0] -> number of rows
+    # acc_gyro_train = acc_gyro_train.reshape(acc_gyro_train.shape[0], 1, 6, 1).astype("float32")
+    # acc_gyro_train = acc_gyro_train / 255.0
+    # acc_gyro_test = acc_gyro_test.reshape(acc_gyro_test.shape[0], 1, 6, 1).astype("float32")
+    # acc_gyro_test = acc_gyro_test / 255.0
+    return acc_gyro_train, acc_gyro_test, label_train, label_test

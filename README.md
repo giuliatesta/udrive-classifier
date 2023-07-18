@@ -12,8 +12,11 @@
 ### Steps 
 1. import data from csv file 
 2. create sliding windows 
-3. combine accelerometer and gyroscope data in one column
-4. split data in training and validation set (80/20 ratio)
-5. define the CNN model 
-6. perform k fold cross validation and train the model over the fold 
-7. perform the prediction over the validation test and compute accuracy
+3. split data in training and validation set (80/20 ratio)
+4. define the CNN model 
+5. perform k fold cross validation and train the model over the fold 
+6. perform the prediction over the validation test and compute accuracy
+
+
+### References
+- [Driving Behavior Dataset: using Machine learning Predict Driver's Behavior](https://www.kaggle.com/datasets/shashwatwork/driving-behavior-dataset?resource=download)
