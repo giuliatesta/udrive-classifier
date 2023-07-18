@@ -51,13 +51,4 @@ def sliding_window(data):
 
 
 def data_split(data, label):
-    acc_gyro_train, acc_gyro_test, label_train, label_test = train_test_split(
-        data, label, train_size=0.8, test_size=0.2)
-
-    # TODO: reshape and normalisation ?
-    # acc_gyro_train.shape[0] -> number of rows
-    # acc_gyro_train = acc_gyro_train.reshape(acc_gyro_train.shape[0], 1, 6, 1).astype("float32")
-    # acc_gyro_train = acc_gyro_train / 255.0
-    # acc_gyro_test = acc_gyro_test.reshape(acc_gyro_test.shape[0], 1, 6, 1).astype("float32")
-    # acc_gyro_test = acc_gyro_test / 255.0
-    return acc_gyro_train, acc_gyro_test, label_train, label_test
+    return train_test_split(data, label, train_size=0.8, test_size=0.2)
