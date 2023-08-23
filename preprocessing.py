@@ -3,7 +3,6 @@ import numpy as np
 
 from sklearn.model_selection import train_test_split
 
-from math import ceil
 
 SAMPLING_RATE = 2  # Sampling Rate: Average 2 samples (rows) per second
 WINDOW_SIZE = 14  # ceil(14 * SAMPLING_RATE)  # Best Window Size: 14 seconds
@@ -46,7 +45,8 @@ def sliding_window(data):
     for i in range(windows_number):
         index_range = range(i,i + WINDOW_SIZE)
         windowed_data[i] = data[index_range]
-        windowed_labels[i] = labels[index_range]
+        windowed_labels[i] = np.mean(labels[index_range], axis=0)
+        print(windowed_labels)
     return windowed_data, windowed_labels
 
 

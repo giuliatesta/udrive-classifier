@@ -23,7 +23,27 @@ def define_cnn():
     model.add(Dense(128, activation="relu"))
     model.add(Dense(NUM_CLASSES, activation="softmax"))
 
-    adam_optimizer = tf.optimizers.Adam(learning_rate=0.001)
+    adam_optimizer = tf.optimizers.legacy.Adam(learning_rate=0.001)
+
+    model.compile(
+        optimizer=adam_optimizer,
+        loss='categorical_crossentropy',
+        metrics=['accuracy']
+    )
+
+    model.summary()
+    return model
+
+
+def define_perceptron():
+    model = Sequential()
+    model.add(Flatten(input_shape=(WINDOW_SIZE, 6), name='flatten_hidden_Layer'))
+    model.add(Dense(64, activation='relu', name='hidden_Layer'))
+    model.add(Dense(NUM_CLASSES, activation='softmax', name='output_Layer'))
+
+    adam_optimizer = tf.optimizers.legacy.Adam(learning_rate=0.001)  # performance issues for M1/M2 Macs
+    #For all the other cases, it's enough to use...
+    # adam_optimizer = tf.optimizers.Adam(learning_rate=0.001)
 
     model.compile(
         optimizer=adam_optimizer,
@@ -70,3 +90,4 @@ def validate(model, data, labels):
     loss, accuracy = model.evaluate(data, labels)
     print(f"Test Loss: {loss}")
     print(f"Test Accuracy: {accuracy}")
+
