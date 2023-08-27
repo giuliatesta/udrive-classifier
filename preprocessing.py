@@ -29,21 +29,25 @@ def _gyroscope_data(data):
     return data.filter(like='gyro', axis=1)
 
 
-def remove_labels(data):
+def get_data(data):
     return np.delete(data, 0, 1)  # 0: index of label column,  1: delete over the columns
 
 
 def get_labels(data):
     return data['class']
 
+# The dataset's labels belongs to [1, 4] range, but I need them to belong to [0,3]
+def scale_labels(labels):
+    return labels-1
+
 
 def sliding_window(data):
-    labels = get_labels(data)
-    data = remove_labels(data)
+    labels = scale_labels(get_labels(data))
+    data = get_data(data)
     windows_number = len(data) - WINDOW_SIZE + 1
 
     windowed_data = np.zeros((windows_number, WINDOW_SIZE, data.shape[1]), np.float32)  # data.shape[1] quante sono le colonne + np.float32 data type
-    windowed_labels = np.zeros((windows_number, WINDOW_SIZE), np.int8)
+    windowed_labels = np.zeros(windows_number, np.int8)
     for i in range(windows_number):
         index_range = range(i,i + WINDOW_SIZE)
         windowed_data[i] = data[index_range]

@@ -5,7 +5,7 @@ from sklearn.model_selection import KFold
 
 from preprocessing import WINDOW_SIZE
 
-NUM_CLASSES = 4
+NUM_CLASSES = 4   # 1, 2, 3, 4
 K = 5
 
 BATCH_SIZE = 256
@@ -24,13 +24,13 @@ def define_cnn():
     model.add(Flatten())
     model.add(Dense(128, activation="relu"))
     model.add(BatchNormalization())
-    model.add(Dense(14, activation="softmax"))
+    model.add(Dense(NUM_CLASSES, activation="softmax"))
 
     adam_optimizer = tf.optimizers.legacy.Adam(learning_rate=0.0001)
 
     model.compile(
         optimizer=adam_optimizer,
-        loss='categorical_crossentropy',
+        loss='sparse_categorical_crossentropy',     #since I'm not using one-hot encoding I need the sparse version
         metrics=['accuracy']
     )
 
