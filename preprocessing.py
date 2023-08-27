@@ -1,3 +1,5 @@
+from collections import Counter
+
 import pandas as pd
 import numpy as np
 
@@ -45,8 +47,10 @@ def sliding_window(data):
     for i in range(windows_number):
         index_range = range(i,i + WINDOW_SIZE)
         windowed_data[i] = data[index_range]
-        windowed_labels[i] = np.mean(labels[index_range], axis=0)
-        print(windowed_labels)
+
+        # Majority rule for selecting the label for the window
+        windowed_labels[i] = Counter(labels[index_range]).most_common(1)[0][0]   #return a list of the n most common elements and their counts from the most common to the least.
+
     return windowed_data, windowed_labels
 
 
