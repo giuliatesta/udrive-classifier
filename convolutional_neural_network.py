@@ -1,4 +1,5 @@
 from keras import Sequential
+from keras.src.callbacks import ModelCheckpoint
 from keras.src.layers import Conv1D, MaxPooling1D, Flatten, Dense, BatchNormalization, Dropout
 import tensorflow as tf
 from sklearn.model_selection import KFold
@@ -14,6 +15,7 @@ EPOCHS = 40
 
 # define the CNN model
 def define_cnn():
+    print("Using CONVOLUTIONAL NEURAL NETWORK")
     model = Sequential()
     model.add(Conv1D(32, kernel_size=3, activation="relu", input_shape=(WINDOW_SIZE, 6)))
     model.add(BatchNormalization())
@@ -26,7 +28,7 @@ def define_cnn():
     model.add(BatchNormalization())
     model.add(Dense(NUM_CLASSES, activation="softmax"))
 
-    adam_optimizer = tf.optimizers.legacy.Adam(learning_rate=0.0001)
+    adam_optimizer = tf.keras.optimizers.legacy.Adam(learning_rate=0.0001)
 
     model.compile(
         optimizer=adam_optimizer,
@@ -39,6 +41,7 @@ def define_cnn():
 
 
 def define_perceptron():
+    print("Using PERCEPTRON MODEL")
     model = Sequential()
     model.add(Flatten(input_shape=(WINDOW_SIZE, 6), name='flatten_hidden_Layer'))
     model.add(Dense(64, activation='relu', name='hidden_Layer'))
@@ -50,7 +53,7 @@ def define_perceptron():
 
     model.compile(
         optimizer=adam_optimizer,
-        loss='binary_crossentropy',
+        loss='sparse_categorical_crossentropy',
         metrics=['accuracy']
     )
 
@@ -66,6 +69,7 @@ def k_fold_cross_validation(data, labels):
 
     # define the model
     model = define_cnn()
+    # model = define_perceptron()
 
     # k-fold cross-validation
     for train, test in k_fold.split(data, labels):
