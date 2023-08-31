@@ -28,7 +28,9 @@ def define_cnn():
     model.add(BatchNormalization())
     model.add(Dense(NUM_CLASSES, activation="softmax"))
 
-    adam_optimizer = tf.keras.optimizers.legacy.Adam(learning_rate=0.0001)
+    #adam_optimizer = tf.keras.optimizers.legacy.Adam(learning_rate=0.0001)  # performance issues for M1/M2 Macs
+    adam_optimizer = tf.optimizers.RMSprop(learning_rate=0.0001)  # to transform the model for coreML I have to use this optimizer
+    # (It also runs slowly on M1 macs but we don't care!)
 
     model.compile(
         optimizer=adam_optimizer,

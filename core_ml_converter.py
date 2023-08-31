@@ -10,8 +10,6 @@ model = ct.convert(
     convert_to="neuralnetwork",
 )
 
-model.input_description["input_descr"] = "accelerometer and gyroscope values"
-model.output_description["output_descr"] = "most likely driver's behaviour"
 model.author = 'Giulia Testa'
 model.version = "1.0.0"
 
