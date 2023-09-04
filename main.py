@@ -10,7 +10,7 @@ def create_dir(path):
 
 # 1. import data from csv file
 print("Reading the data...")
-data = read_csv("./dataset/sensor_raw.csv")
+data = read_csv("./dataset/final_dataset.csv")
 print("Reading done.")
 
 # 2. create sliding windows

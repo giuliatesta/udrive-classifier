@@ -6,7 +6,7 @@ from sklearn.model_selection import KFold
 
 from preprocessing import WINDOW_SIZE
 
-NUM_CLASSES = 4   # 1, 2, 3, 4
+NUM_CLASSES = 5   # 0, 1, 2, 3, 4
 K = 5
 
 BATCH_SIZE = 256
@@ -30,7 +30,7 @@ def define_cnn():
 
     #adam_optimizer = tf.keras.optimizers.legacy.Adam(learning_rate=0.0001)  # performance issues for M1/M2 Macs
     adam_optimizer = tf.optimizers.RMSprop(learning_rate=0.0001)  # to transform the model for coreML I have to use this optimizer
-    # (It also runs slowly on M1 macs but we don't care!)
+    # (It also runs slowly on M1 macs, but we don't care!)
 
     model.compile(
         optimizer=adam_optimizer,

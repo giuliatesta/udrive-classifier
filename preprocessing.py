@@ -10,6 +10,28 @@ SAMPLING_RATE = 2  # Sampling Rate: Average 2 samples (rows) per second
 WINDOW_SIZE = 14  # ceil(14 * SAMPLING_RATE)  # Best Window Size: 14 seconds
 
 
+def prepare_dataset():
+    normal_driving_dataset = pd.read_csv("./dataset/train_motion_data.csv", sep=',', index_col=False)
+    normal_driving_dataset.loc[normal_driving_dataset['Class'] != "AGGRESSIVE"]
+    df = pd.DataFrame(columns=['class', 'gyroX', 'gyroY', 'gyroZ', 'accX', 'accY', 'accZ'])
+    df['class'] = [5] * len(normal_driving_dataset)     # class label: normal driving
+    df['gyroX'] = normal_driving_dataset['GyroX']
+    df['gyroY'] = normal_driving_dataset['GyroY']
+    df['gyroZ'] = normal_driving_dataset['GyroZ']
+    df['accX'] = normal_driving_dataset['AccX']
+    df['accY'] = normal_driving_dataset['AccY']
+    df['accZ'] = normal_driving_dataset['AccZ']
+
+    dataset = read_csv("./dataset/sensor_raw.csv")
+    dataset['gyroX'] = dataset['gyroX'].round(7)
+    dataset['gyroY'] = dataset['gyroY'].round(7)
+    dataset['gyroZ'] = dataset['gyroZ'].round(7)
+    dataset['accX'] = dataset['accX'].round(7)
+    dataset['accY'] = dataset['accY'].round(7)
+    dataset['accZ'] = dataset['accZ'].round(7)
+    dataset.to_csv("./dataset/final_dataset.csv", index=False, mode="w")
+    df.to_csv("./dataset/final_dataset.csv", index=False, mode="a", header=False)       #mode = a (append); header = False no row with columns' names
+
 def read_csv(path):
     data = pd.read_csv(path, sep=',', index_col=False)
     data.columns = ['class', 'gyroX', 'gyroY', 'gyroZ', 'accX', 'accY', 'accZ']
@@ -36,7 +58,7 @@ def get_data(data):
 def get_labels(data):
     return data['class']
 
-# The dataset's labels belongs to [1, 4] range, but I need them to belong to [0,3]
+# The dataset's labels belongs to [1, 5] range, but I need them to belong to [0, 4]
 def scale_labels(labels):
     return labels-1
 
@@ -60,3 +82,7 @@ def sliding_window(data):
 
 def data_split(data, label):
     return train_test_split(data, label, train_size=0.8, test_size=0.2)
+
+
+# to create the final and complete dataset with 5 labels
+# prepare_dataset()
