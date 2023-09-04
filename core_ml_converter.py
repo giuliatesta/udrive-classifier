@@ -6,7 +6,7 @@ from main import MODEL_PATH
 # Convert the model using the Unified Conversion API to an ML Program
 model = ct.convert(
     load_model(f'{MODEL_PATH}/cnn.keras'),
-    classifier_config=ct.ClassifierConfig([0, 1, 2, 3]),
+    classifier_config=ct.ClassifierConfig([0, 1, 2, 3, 4]),
     convert_to="neuralnetwork",
 )
 
