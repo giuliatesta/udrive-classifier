@@ -4,7 +4,7 @@
 
 - _Sequential_: create models layer-by-layer by stacking them. It is limited in that it does not allow you to create models that share layers or have multiple inputs or outputs (like _Functional_).
 - _Conv_: since the dataset being accelerometer and gyroscope data, which are _sequential data_, _Conv1D_ is the most appropriate choice.
-- _Activation_: uses the _rectifier function_ to  allow faster and effective training of deep neural architectures on large and complex datasets. (NB: ReLu is a _ramp_ function)
+- _Activation_: uses the _rectifier function_ to allow faster and effective training of deep neural architectures on large and complex datasets. (NB: ReLu is a _ramp_ function)
     The activation function scores pixel values according to some measure of importance. The ReLU activation says that negative values are not important and so sets them to 0. ("_Everything unimportant is equally unimportant._").
 
 

@@ -1,5 +1,4 @@
 from keras import Sequential
-from keras.src.callbacks import ModelCheckpoint
 from keras.src.layers import Conv1D, MaxPooling1D, Flatten, Dense, BatchNormalization, Dropout
 import tensorflow as tf
 from sklearn.model_selection import KFold
@@ -28,12 +27,11 @@ def define_cnn():
     model.add(BatchNormalization())
     model.add(Dense(NUM_CLASSES, activation="softmax"))
 
-    #adam_optimizer = tf.keras.optimizers.legacy.Adam(learning_rate=0.0001)  # performance issues for M1/M2 Macs
-    adam_optimizer = tf.optimizers.RMSprop(learning_rate=0.0001)  # to transform the model for coreML I have to use this optimizer
-    # (It also runs slowly on M1 macs, but we don't care!)
+    # performance issues for M1/M2 Macs - should use the tf.optimizers.legacy
+    optimizer = tf.optimizers.RMSprop(learning_rate=0.0001)  # to transform the model for coreML I have to use this optimizer
 
     model.compile(
-        optimizer=adam_optimizer,
+        optimizer=optimizer,
         loss='sparse_categorical_crossentropy',     #since I'm not using one-hot encoding I need the sparse version
         metrics=['accuracy']
     )
@@ -49,12 +47,10 @@ def define_perceptron():
     model.add(Dense(64, activation='relu', name='hidden_Layer'))
     model.add(Dense(NUM_CLASSES, activation='softmax', name='output_Layer'))
 
-    adam_optimizer = tf.optimizers.legacy.Adam(learning_rate=0.001)  # performance issues for M1/M2 Macs
-    #For all the other cases, it's enough to use...
-    # adam_optimizer = tf.optimizers.Adam(learning_rate=0.001)
+    optimizer = tf.optimizers.RMSprop(learning_rate=0.0001)
 
     model.compile(
-        optimizer=adam_optimizer,
+        optimizer=optimizer,
         loss='sparse_categorical_crossentropy',
         metrics=['accuracy']
     )
@@ -63,15 +59,14 @@ def define_perceptron():
     return model
 
 
-def k_fold_cross_validation(data, labels):
+def k_fold_cross_validation(data, labels, cnn=True):
     histories = []        # record of training loss values and metrics values at successive epochs,
 
     # create a k-fold cross-validator
     k_fold = KFold(n_splits=K, shuffle=True)
 
     # define the model
-    model = define_cnn()
-    # model = define_perceptron()
+    model = define_cnn() if cnn else define_perceptron()
 
     # k-fold cross-validation
     for train, test in k_fold.split(data, labels):
