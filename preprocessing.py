@@ -4,10 +4,10 @@ import pandas as pd
 import numpy as np
 
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import MinMaxScaler
 
-
-SAMPLING_RATE = 2  # Sampling Rate: Average 2 samples (rows) per second
-WINDOW_SIZE = 14  # ceil(14 * SAMPLING_RATE)  # Best Window Size: 14 seconds
+# Sampling Rate: Average 2 samples (rows) per second
+WINDOW_SIZE = 14  # 14 * SAMPLING_RATE  # Best Window Size: 14 seconds
 
 
 def prepare_dataset():
@@ -55,6 +55,9 @@ def _get_data(data):
 def _get_scaled_labels(data):
     return data['class']-1
 
+def normalize(data):
+    scaler = MinMaxScaler()
+    return scaler.fit_transform(data)
 
 def sliding_window(data):
     labels = _get_scaled_labels(data)
@@ -65,7 +68,7 @@ def sliding_window(data):
     windowed_labels = np.zeros(windows_number, np.int8)
     for i in range(windows_number):
         index_range = range(i,i + WINDOW_SIZE)
-        windowed_data[i] = data[index_range]
+        windowed_data[i] = normalize(data[index_range])
 
         # Majority rule for selecting the label for the window
         windowed_labels[i] = Counter(labels[index_range]).most_common(1)[0][0]

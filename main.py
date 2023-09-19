@@ -1,9 +1,10 @@
 import os
 
 from convolutional_neural_network import k_fold_cross_validation, validate
-from preprocessing import read_csv, data_split, sliding_window, WINDOW_SIZE
+from preprocessing import read_csv, data_split, sliding_window, WINDOW_SIZE, normalize
 
 MODEL_PATH = "./model"
+MODEL_NAME = f"cnn-{WINDOW_SIZE}-NORM"
 def create_dir(path):
     if not os.path.isdir(path):
         os.makedirs(path, exist_ok=True)
@@ -31,7 +32,7 @@ trained_model, histories = k_fold_cross_validation(acc_gyro_train, label_train)
 print("Training done.")
 # save the model
 create_dir(MODEL_PATH)
-trained_model.save(f'{MODEL_PATH}/cnn-{WINDOW_SIZE}.keras')
+trained_model.save(f'{MODEL_PATH}/{MODEL_NAME}.keras')
 print(f"Saving the model in {MODEL_PATH}")
 # 6. perform the prediction over the validation test and compute accuracy
 print("Validating the model...")
