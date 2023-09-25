@@ -8,7 +8,7 @@ from preprocessing import WINDOW_SIZE
 NUM_CLASSES = 5  # 0, 1, 2, 3, 4
 K = 5
 
-BATCH_SIZE = 128
+BATCH_SIZE = 64
 EPOCHS = 40
 
 
@@ -42,7 +42,7 @@ def define_cnn():
 
 
 def define_ff():
-    print("Using FEED FORWARD MODEL")
+    print("Using FEED FORWARD NEURAL NETWORK")
     model = Sequential()
     model.add(Flatten(input_shape=(WINDOW_SIZE, 6)))
     model.add(Dense(64, activation='relu'))
