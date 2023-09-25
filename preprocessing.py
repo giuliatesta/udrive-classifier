@@ -4,17 +4,16 @@ import pandas as pd
 import numpy as np
 
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import MinMaxScaler
 
 # Sampling Rate: Average 2 samples (rows) per second
-WINDOW_SIZE = 14  # 14 * SAMPLING_RATE  # Best Window Size: 14 seconds
+WINDOW_SIZE = 28  # 14 * SAMPLING_RATE  # Best Window Size: 14 seconds
 
 
 def prepare_dataset():
     normal_driving_dataset = pd.read_csv("./dataset/train_motion_data.csv", sep=',', index_col=False)
     normal_driving_dataset = normal_driving_dataset.loc[normal_driving_dataset['Class'] != "AGGRESSIVE"]
     df = pd.DataFrame(columns=['class', 'gyroX', 'gyroY', 'gyroZ', 'accX', 'accY', 'accZ'])
-    df['class'] = [5] * len(normal_driving_dataset)     # class label: normal driving
+    df['class'] = [5] * len(normal_driving_dataset)  # class label: normal driving
     df['gyroX'] = normal_driving_dataset['GyroX']
     df['gyroY'] = normal_driving_dataset['GyroY']
     df['gyroZ'] = normal_driving_dataset['GyroZ']
@@ -31,7 +30,9 @@ def prepare_dataset():
     dataset['accY'] = dataset['accY'].round(7)
     dataset['accZ'] = dataset['accZ'].round(7)
     dataset.to_csv("./dataset/final_dataset.csv", index=False, mode="w")
-    df.to_csv("./dataset/final_dataset.csv", index=False, mode="a", header=False)       #mode = a (append); header = False no row with columns' names
+    df.to_csv("./dataset/final_dataset.csv", index=False, mode="a",
+              header=False)  # mode = a (append); header = False no row with columns' names
+
 
 def read_csv(path):
     data = pd.read_csv(path, sep=',', index_col=False)
@@ -53,33 +54,30 @@ def _get_data(data):
 
 # The dataset's labels belongs to [1, 5] range, but I need them to belong to [0, 4]
 def _get_scaled_labels(data):
-    return data['class']-1
+    return data['class'] - 1
 
-def normalize(data):
-    scaler = MinMaxScaler()
-    return scaler.fit_transform(data)
 
 def sliding_window(data):
     labels = _get_scaled_labels(data)
     data = _get_data(data)
     windows_number = len(data) - WINDOW_SIZE + 1
 
-    windowed_data = np.zeros((windows_number, WINDOW_SIZE, data.shape[1]), np.float32)  # data.shape[1] quante sono le colonne + np.float32 data type
+    windowed_data = np.zeros((windows_number, WINDOW_SIZE, data.shape[1]),
+                             np.float32)  # data.shape[1] quante sono le colonne + np.float32 data type
     windowed_labels = np.zeros(windows_number, np.int8)
     for i in range(windows_number):
-        index_range = range(i,i + WINDOW_SIZE)
-        windowed_data[i] = normalize(data[index_range])
+        index_range = range(i, i + WINDOW_SIZE)
+        windowed_data[i] = data[index_range]
 
         # Majority rule for selecting the label for the window
         windowed_labels[i] = Counter(labels[index_range]).most_common(1)[0][0]
-        #return a list of the n most common elements and their counts from the most common to the least.
+        # return a list of the n most common elements and their counts from the most common to the least.
 
     return windowed_data, windowed_labels
 
 
 def data_split(data, label):
     return train_test_split(data, label, train_size=0.8, test_size=0.2)
-
 
 # to create the final and complete dataset with 5 labels
 # prepare_dataset()

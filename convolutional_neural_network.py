@@ -1,14 +1,14 @@
 from keras import Sequential
-from keras.src.layers import Conv1D, MaxPooling1D, Flatten, Dense, BatchNormalization, Dropout
+from keras.src.layers import Conv1D, MaxPooling1D, Flatten, Dense, BatchNormalization
 import tensorflow as tf
 from sklearn.model_selection import KFold
 
 from preprocessing import WINDOW_SIZE
 
-NUM_CLASSES = 5   # 0, 1, 2, 3, 4
+NUM_CLASSES = 5  # 0, 1, 2, 3, 4
 K = 5
 
-BATCH_SIZE = 256
+BATCH_SIZE = 128
 EPOCHS = 40
 
 
@@ -28,11 +28,12 @@ def define_cnn():
     model.add(Dense(NUM_CLASSES, activation="softmax"))
 
     # performance issues for M1/M2 Macs - should use the tf.optimizers.legacy
-    optimizer = tf.optimizers.RMSprop(learning_rate=0.0001)  # to transform the model for coreML I have to use this optimizer
+    # but to transform the model for coreML I have to use this optimizer, the legacy version isn't good
+    optimizer = tf.optimizers.RMSprop(learning_rate=0.0001)
 
     model.compile(
         optimizer=optimizer,
-        loss='sparse_categorical_crossentropy',     #since I'm not using one-hot encoding I need the sparse version
+        loss='sparse_categorical_crossentropy',  # since I'm not using one-hot encoding I need the sparse version
         metrics=['accuracy']
     )
 
@@ -40,14 +41,14 @@ def define_cnn():
     return model
 
 
-def define_perceptron():
-    print("Using PERCEPTRON MODEL")
+def define_ff():
+    print("Using FEED FORWARD MODEL")
     model = Sequential()
-    model.add(Flatten(input_shape=(WINDOW_SIZE, 6), name='flatten_hidden_Layer'))
-    model.add(Dense(64, activation='relu', name='hidden_Layer'))
-    model.add(Dense(NUM_CLASSES, activation='softmax', name='output_Layer'))
+    model.add(Flatten(input_shape=(WINDOW_SIZE, 6)))
+    model.add(Dense(64, activation='relu'))
+    model.add(Dense(NUM_CLASSES, activation='softmax'))
 
-    optimizer = tf.optimizers.RMSprop(learning_rate=0.0001)
+    optimizer = tf.optimizers.legacy.RMSprop(learning_rate=0.0001)
 
     model.compile(
         optimizer=optimizer,
@@ -60,16 +61,21 @@ def define_perceptron():
 
 
 def k_fold_cross_validation(data, labels, cnn=True):
-    histories = []        # record of training loss values and metrics values at successive epochs,
+    histories = []  # record of training loss values and metrics values at successive epochs,
 
     # create a k-fold cross-validator
     k_fold = KFold(n_splits=K, shuffle=True)
 
     # define the model
-    model = define_cnn() if cnn else define_perceptron()
+    model = define_cnn() if cnn else define_ff()
+
+    i = 1
 
     # k-fold cross-validation
     for train, test in k_fold.split(data, labels):
+        print(f"-----FOLD {i}-----")
+        i += 1
+
         data_train = data[train]
         data_test = data[test]
 
@@ -80,18 +86,17 @@ def k_fold_cross_validation(data, labels, cnn=True):
         history = model.fit(
             data_train,
             labels_train,
-            epochs=EPOCHS,           # an epoch is an iteration over the entire x and y data provided
-            batch_size=BATCH_SIZE,   # number of samples per gradient update
-            verbose=2,               # one line per epoch
+            epochs=EPOCHS,  # an epoch is an iteration over the entire x and y data provided
+            batch_size=BATCH_SIZE,  # number of samples per gradient update
+            verbose=1,      # 2 = one line per epoch
             validation_data=(data_test, labels_test),
-            # callbacks=[reduce_lr_acc, early_stopping, mcp_save]
         )
         histories.append(history)
-        return model, histories
+
+    return model, histories
 
 
 def validate(model, data, labels):
     loss, accuracy = model.evaluate(data, labels)
     print(f"Test Loss: {loss}")
     print(f"Test Accuracy: {accuracy}")
-
