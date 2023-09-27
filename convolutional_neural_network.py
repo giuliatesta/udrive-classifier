@@ -8,7 +8,7 @@ from preprocessing import WINDOW_SIZE
 NUM_CLASSES = 5  # 0, 1, 2, 3, 4
 K = 5
 
-BATCH_SIZE = 64
+BATCH_SIZE = 256
 EPOCHS = 40
 
 
@@ -19,7 +19,7 @@ def define_cnn():
     model.add(Conv1D(32, kernel_size=3, activation="relu", input_shape=(WINDOW_SIZE, 6)))
     model.add(BatchNormalization())
     model.add(MaxPooling1D(pool_size=2))
-    model.add(Conv1D(64, kernel_size=3, activation="relu"))  # must be double of the first Conv1D filter
+    model.add(Conv1D(64, kernel_size=3, activation="relu"))
     model.add(BatchNormalization())
     model.add(MaxPooling1D(pool_size=2))
     model.add(Flatten())
@@ -41,6 +41,7 @@ def define_cnn():
     return model
 
 
+# define the FFNN model
 def define_ff():
     print("Using FEED FORWARD NEURAL NETWORK")
     model = Sequential()
@@ -66,11 +67,10 @@ def k_fold_cross_validation(data, labels, cnn=True):
     # create a k-fold cross-validator
     k_fold = KFold(n_splits=K, shuffle=True)
 
-    # define the model
+    # get the model
     model = define_cnn() if cnn else define_ff()
 
     i = 1
-
     # k-fold cross-validation
     for train, test in k_fold.split(data, labels):
         print(f"-----FOLD {i}-----")

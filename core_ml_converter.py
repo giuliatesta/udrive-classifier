@@ -2,7 +2,6 @@ import coremltools as ct
 from keras.src.saving.saving_api import load_model
 
 from main import MODEL_PATH, MODEL_NAME
-from preprocessing import WINDOW_SIZE
 
 # Convert the model using the Unified Conversion API to an ML Program
 model = ct.convert(

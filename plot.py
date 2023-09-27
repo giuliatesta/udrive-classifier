@@ -14,16 +14,12 @@ def plot_accuracy(histories, epochs=EPOCHS, batch_size=BATCH_SIZE, cnn=True):
     _plot(histories, "accuracy", epochs=epochs, batch_size=batch_size, cnn=cnn)
 
 
-def plot_loss(histories, epochs=EPOCHS, batch_size=BATCH_SIZE, cnn=True):
-    _plot(histories, "loss", epochs=epochs, batch_size=batch_size, cnn=cnn)
-
-
 def _plot(histories, name, epochs=EPOCHS, batch_size=BATCH_SIZE, cnn=True):
     train = []
     validation = []
 
-    for i in range(K-1):
-        train.append(_average(histories[i].history.get(name)))     #average
+    for i in range(K - 1):
+        train.append(_average(histories[i].history.get(name)))  # average
         validation.append(_average(histories[i].history.get(f"val_{name}")))  # average
 
     figure(figsize=(12, 8))

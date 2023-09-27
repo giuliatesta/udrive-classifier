@@ -1,3 +1,4 @@
+import os
 from collections import Counter
 
 import pandas as pd
@@ -79,5 +80,9 @@ def sliding_window(data):
 def data_split(data, label):
     return train_test_split(data, label, train_size=0.8, test_size=0.2)
 
+
+def create_dir(path):
+    if not os.path.isdir(path):
+        os.makedirs(path, exist_ok=True)
 # to create the final and complete dataset with 5 labels
 # prepare_dataset()
