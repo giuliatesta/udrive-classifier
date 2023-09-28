@@ -219,12 +219,50 @@ def validate(model, data, labels):
 ### 4.1 Accuracy plots
 
 For both the convolutional neural network and the feed forward neural network, through the *matplotlib* Python package, the accuracy plots were drawn. Here are the results: 
+<table>
+  <tr>
+    <td align="center"><img src="https://github.com/giuliatesta/udrive-classifier/assets/62283724/21cb5551-2c4d-474c-9988-021cf87eb61d" width="200px" alt="CNN with 20 epochs and batch size 32"></td>
+      <td align="center"><img src="https://github.com/giuliatesta/udrive-classifier/assets/62283724/5ce057c4-5d56-40b4-8dfe-6c9bc4cb0617" width="200px" alt="CNN with 40 epochs and batch size 32"></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="https://github.com/giuliatesta/udrive-classifier/assets/62283724/325b1995-39f8-46ff-9e01-0de5ece462c8" width="200px" alt="CNN with 20 epochs and batch size 64"></td>
+      <td align="center"><img src="https://github.com/giuliatesta/udrive-classifier/assets/62283724/74199cb6-846c-43c9-aecd-99c069b14a28" width="200px" alt="CNN with 40 epochs and batch size 64"></td
+  </tr>
+  <tr>
+<td align="center"><img src="https://github.com/giuliatesta/udrive-classifier/assets/62283724/b92a3986-4ec4-4a82-9cd3-45f7235c368c" width="200px" alt="CNN with 20 epochs and batch size 128"></td>
+       <td align="center"><img src="https://github.com/giuliatesta/udrive-classifier/assets/62283724/bb5b2a9e-496c-42f8-a479-9bc9f0f22858" width="200px" alt="CNN with 40 epochs and batch size 128"></td>
+</tr>
+  <tr>
+    <td align="center"><img src="https://github.com/giuliatesta/udrive-classifier/assets/62283724/57b70d51-ea54-4c5f-80c7-528e23fbd1e6" width="200px" alt="CNN with 20 epochs and batch size 256"></td>
+    <td align="center"><img src="https://github.com/giuliatesta/udrive-classifier/assets/62283724/78da9b58-f952-4bf1-ad8b-32652e1f31fd" width="200px" alt="CNN with 40 epochs and batch size 256"></td>
+  </tr>
+</table>
+
 
 In general, the training accuracies for the models with higher batch sizes start with lower accuracy levels - see Figure 4.1 and 4.2. Nevertheless, both tend to converge at the second fold. As a matter of fact, all of them seems to converge at the second fold, without any sign of overfitting or underfitting.
 
 Maintaining 40 as the number of epochs, the increase in the batch size does not produce a substantial improvement in the accuracy performance of the model. 32, 64, 128 and 256 are all valid and legit choices for the model: one can choose one of them depending on the available resources. In the scenario where this model will be embedded into a mobile phone application, a model that requires less memory usage might be more valuable, meaning a model with smaller sizes. The only visible difference between plots with different batch size is that the accuracy tends, with smaller sizes, to start at the first fold with higher accuracy values, while plots with bigger sizes have smaller initial values.
 
 However, it should be noted that Figure 1.1, 1.2, 2.1 and 3.1 show the convolutional model with worse convergence for the accuracy: it is slower than the others, but it’s a small delay, that can be overlooked. 
+
+<table>
+  <tr>
+    <td align="center"><img src="https://github.com/giuliatesta/udrive-classifier/assets/62283724/e4f89e3b-c2a3-4138-997f-ca3cb4659883" width="200px" alt="FFNN with 20 epochs and batch size 32"></td>
+      <td align="center"><img src="https://github.com/giuliatesta/udrive-classifier/assets/62283724/92f77f02-6b67-475e-84bc-4be58e1811a2" width="200px" alt="FFNN with 40 epochs and batch size 32"></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="https://github.com/giuliatesta/udrive-classifier/assets/62283724/2b20a858-f7cb-40b2-bbd6-4358b4077048" width="200px" alt="FFNN with 20 epochs and batch size 64"></td>
+      <td align="center"><img src="https://github.com/giuliatesta/udrive-classifier/assets/62283724/fe852389-b250-45f3-9b34-0ac7715467c3" width="200px" alt="FFNN with 40 epochs and batch size 64"></td
+  </tr>
+  <tr>
+<td align="center"><img src="https://github.com/giuliatesta/udrive-classifier/assets/62283724/ef7ef732-b52c-4923-9331-6289b6d578e1" width="200px" alt="FFNN with 20 epochs and batch size 128"></td>
+       <td align="center"><img src="https://github.com/giuliatesta/udrive-classifier/assets/62283724/3605509d-1776-444b-923e-c3744015f6c2" width="200px" alt="FFNN with 40 epochs and batch size 128"></td>
+</tr>
+  <tr>
+    <td align="center"><img src="https://github.com/giuliatesta/udrive-classifier/assets/62283724/15ab4ae5-540d-4605-89d4-9c52a8079dbd" width="200px" alt="FFNN with 20 epochs and batch size 256"></td>
+    <td align="center"><img src="https://github.com/giuliatesta/udrive-classifier/assets/62283724/84134091-99a5-4151-931f-3ffd35fb92da" width="200px" alt="FFNN with 40 epochs and batch size 256"></td>
+  </tr>
+</table>
 
 As expected, the feed forward neural network, just by looking at these plots, has lower accuracy values. They all start from lower initial accuracy values, but in the end, they converge with a relatively good speed. The only exception, here, is the Figure 1.1 where the validation accuracy tends to decrease in the last fold: this be reconducted to an overfitting. 
 
